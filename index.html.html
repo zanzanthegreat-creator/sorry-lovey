@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry Lovey 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffd1dc, #ff9aab);
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            text-align: center;
+        }
+
+        #mainScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            color: #b02a70;
+            font-size: 1rem;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .buttons-container {
+            position: relative;
+            width: 450px;
+            height: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+        }
+
+        #hateBtn {
+            background: #888;
+            color: white;
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #loveBtn {
+            background: linear-gradient(45deg, #ff4d6d, #ff6b9d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        #loveBtn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
+        }
+
+        #loveScreen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .heart {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: heartbeat 1s infinite alternate;
+        }
+
+        @keyframes heartbeat {
+            from { transform: scale(1); }
+            to { transform: scale(1.3); }
+        }
+
+        p {
+            color: #b02a70;
+            font-size: 1.3rem;
+            line-height: 1.8;
+        }
+
+        .music-note {
+            margin-top: 30px;
+            color: #d63384;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile fix */
+        @media (max-width: 480px) {
+            .buttons-container {
+                width: 100%;
+                padding: 0 10px;
+            }
+            button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Screen -->
+    <div id="mainScreen" class="screen">
+        <h1>I'm sorry for hurting you, Lovey 🥺💔</h1>
+        <p class="subtitle">:<</p>
+        <div class="buttons-container">
+            <button id="hateBtn">I hate you 😤</button>
+            <button id="loveBtn">I love you ❤️</button>
+        </div>
+        <p class="music-note">🥺</p>
+    </div>
+
+    <!-- Love Screen -->
+    <div id="loveScreen" class="screen">
+        <div class="heart">💖</div>
+        <h1>Yay!! Lablab you too!! 🥰</h1>
+        <p>HIHI LABLAB mo na ko,<br>I love youuu so much mahal!! 💕<br>You make everything better 🥺❤️</p>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="data:audio/wav;base64,UklGRqQCAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA" type="audio/wav">
+    
+
+    <script>
+        const hateBtn = document.getElementById('hateBtn');
+        const loveBtn = document.getElementById('loveBtn');
+        const mainScreen = document.getElementById('mainScreen');
+        const loveScreen = document.getElementById('loveScreen');
+        const bgMusic = document.getElementById('bgMusic');
+
+        // Generate soft 8-bit love melody using Web Audio API (works everywhere!)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillators = [];
+
+        function playNote(freq, startTime, duration, volume = 0.15) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'square'; // classic 8-bit sound
+            osc.frequency.value = freq;
+            osc.connect(gain);
+            
+            gain.gain.value = 0;
+            gain.connect(audioContext.destination);
+            
+            osc.start(startTime);
+            gain.gain.setValueAtTime(0, startTime);
+            gain.gain.linearRampToValueAtTime(volume, startTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.05);
+            osc.stop(startTime + duration);
+            
+            oscillators.push(osc);
+        }
+
+        // Sweet 8-bit love melody
+        function playMelody() {
+            const now = audioContext.currentTime;
+            const notes = [
+                [523.25, 0, 0.4], // C5
+                [659.25, 0.5, 0.4], // E5
+                [783.99, 1.0, 0.5], // G5
+                [659.25, 1.6, 0.4], // E5
+                [523.25, 2.1, 0.4], // C5
+                [392.00, 2.6, 0.5], // G4
+                [440.00, 3.2, 0.4], // A4
+                [523.25, 3.7, 0.4], // C5
+                [587.33, 4.2, 0.4], // D5
+                [523.25, 4.7, 0.8], // C5
+            ];
+            
+            notes.forEach(([freq, time, dur]) => {
+                playNote(freq, now + time, dur);
+            });
+        }
+
+        // Start music on first interaction (browsers require this!)
+        document.addEventListener('click', () => {
+            if (audioContext.state === 'suspended') audioContext.resume();
+            if (oscillators.length === 0) {
+                playMelody();
+                setInterval(playMelody, 5500); // repeat melody loop
+            }
+        }, { once: true });
+
+        // Make the hate button run away
+        hateBtn.addEventListener('mouseover', moveButton);
+        hateBtn.addEventListener('click', moveButton);
+        hateBtn.addEventListener('touchstart', moveButton);
+
+        function moveButton() {
+            const container = document.querySelector('.buttons-container');
+            const containerRect = container.getBoundingClientRect();
+            const btnWidth = hateBtn.offsetWidth;
+            const btnHeight = hateBtn.offsetHeight;
+
+            const maxX = containerRect.width - btnWidth - 20;
+            const maxY = containerRect.height - btnHeight - 20;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            hateBtn.style.left = randomX + 'px';
+            hateBtn.style.top = randomY + 'px';
+        }
+
+        // Go to love screen
+        loveBtn.addEventListener('click', () => {
+            mainScreen.style.display = 'none';
+            loveScreen.style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
